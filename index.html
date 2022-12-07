@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <Title>Scomiisertvm</Title>
+        <script>
+        function inputbox(){
+            let textinput = document.getElementById("textinput");
+            let val =  textinput.value;
+            let len =val.length;
+            
+           
+            if (len == 10){
+              if (checkCard(val)){
+              document.getElementById("output").innerHTML = "PASS";
+              bell.play()
+            }
+              else{document.getElementById("output").innerHTML = "FAIL";
+                  permissiondenied.play()
+            }
+
+              setTimeout(function(){document.getElementById("textinput").value = "";},800);
+              setTimeout(function(){document.getElementById("output").innerHTML = "";},800);
+            }
+            else if(len > 10){document.getElementById("textinput").value = "";}
+        }  
+
+      function readFile(){
+            var fileData = new FileReader();
+            
+            fileData.onload = function(){
+              data = fileData.result;
+              let x = document.getElementById("textinput");
+              x.setAttribute('type','text');
+              x.focus();
+              x.setAttribute('oninput',"inputbox()");
+              x.removeEventListener('change',readFile); //This is not working. ReadFile is called when the input box is changed 
+              
+              bell = new Audio("bell.mp3");
+              permissiondenied = new Audio("permissiondenied.mp3")
+
+            }
+            fileData.readAsText(document.getElementById("textinput").files[0]);
+        
+            
+      }
+            function checkCard(x){
+                for(let i = 0;i<data.length/12;i++){
+                  if (x == data.slice(12*i,12*i+10)){
+                    return true;
+                  }
+                }
+                return false;
+
+            }
+           </script>
+
+        <style>
+          div {
+            
+            height: 200px;
+            width: 80%;
+            background-color: powderblue;
+            margin:0 auto;
+            vertical-align:center;
+            
+          }
+          </style>
+    </head>
+    <body>
+        <div>
+        <h1 align = center >SCOM IISER TVM</h1>
+        <h2  align = center >ID Card Tapping</h2>
+        <form align = center action = "/" method = "post" id = "frm" >
+        <input type="file" name = "cardnumber" id = "textinput" onchange = readFile()>
+        </form>
+
+        
+        <h1 align = 'center' id = "output"></h1>
+        
+       
+        </div>
+    </body>
+</html>
