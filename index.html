@@ -4,8 +4,22 @@
         <Title>Scomiisertvm</Title>
         <meta name = "viewport" content =  "width = device-width, initial-scale = 1.0">
         <script src = "static/script.js"></script>
-
+        <script src = "static/rabbit.js"></script>
         <style>
+<<< mess2.0
+          body {
+            background-color:white;;
+          }
+          div {
+            position: auto;
+            height: 250px;
+            width: min(300px,70%);
+            background-color: rgb(59, 1, 120);
+           margin: auto;
+           transform: scale(1.3);
+
+            
+=======
 
           div {
             position: auto;
@@ -14,20 +28,39 @@
             background-color: powderblue;
             margin: auto;
             vertical-align:center;
+>>> main
             
           }
+          h2 {
+            color :white;
+          }
           </style>
+
+          <script>
+
+             //Prevent submit 
+            window.addEventListener('load',()=>{
+              document.getElementById("form").addEventListener("submit",(event)=>event.preventDefault())
+              document.getElementById("form").addEventListener("keypress",(event)=>{if (event.keycode == 13){event.preventDefault()}
+            })})
+          </script> 
     </head>
     <body>
-        <div>
+      <br><br><br><br><br>
         <h1 align = center >SCOM IISER TVM</h1>
-        <h2  align = center >ID Card Tapping</h2>
-        <form align = center>
-        <input type="text" name = "cardnumber" id = "textinput" oninput = inputBox() autofocus>
+        <br><br><br><br>
+        <div>
+          <br>
+        <h2  align = center id = "a" style = "font-size: 15px;">LOGIN</h2>
+        <br>
+        <form style = "text-align: center;" id = "form" onsubmit="handleSubmit(this)" >
+        <input type="text" name = "user" id = "user" placeholder = user autofocus size = 22>
+        <br><br>
+        <input type = "password" id = "pass" name = "password" placeholder = Password size = 22> 
+        <br><br>
+        <b><p id = "output" style="font-size: 25px;"></p></b>
+        <input type = submit id = "sub" value = "submit">
         </form>
-
-        
-        <h1 align = 'center' id = "output"></h1>
         
        
         </div>
