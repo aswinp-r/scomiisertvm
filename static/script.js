@@ -53,7 +53,7 @@ function GetData(user,password){
         try{
         if (dataJSON[user]===null || dataJSON[user]=="" || dataJSON[user].length ==0){
           alert("User or password may be incorrect or try again later");return
-        }}catch(error){alert("Try again");return;location.reload()}
+        }}catch(error){console.log(1);return;location.reload()}
         
         data = dataJSON[user]
         if(data === undefined){;return}
