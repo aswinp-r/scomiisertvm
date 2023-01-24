@@ -53,9 +53,17 @@ function GetData(user,password){
         try{
         if (dataJSON[user]===null || dataJSON[user]=="" || dataJSON[user].length ==0){
           alert("User or password may be incorrect or try again later");return
+
+        }}catch(error){console.log(123);return;location.reload()}
+
         }}catch(error){console.log(1);return;location.reload()}
+
         
         data = dataJSON[user]
+
+        //Initialise the variable for storing the attendance
+        attendance = {}
+
         if(data === undefined){;return}
       }
       catch(error){alert(error);location.reload();return}
@@ -78,6 +86,10 @@ try{
 
 
 function checkCard(x){
+  //First we need to check whether the card is already used
+  if(attendance[x]===true){return false}
+  attendance[x] = true
+        if 
         for(let i = 0;i<data.length;i++){
           if (x == data[i]){
             return true;
