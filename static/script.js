@@ -89,7 +89,7 @@ function checkCard(x){
   //First we need to check whether the card is already used
   if(attendance[x]===true){return false}
   attendance[x] = true
-        if 
+        
         for(let i = 0;i<data.length;i++){
           if (x == data[i]){
             return true;
