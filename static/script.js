@@ -6,10 +6,21 @@ function inputBox(){
     
    
     if (len == 10){
-      if (checkCard(val)){
+      //First we need to check whether the card is already used
+      if(attendance[val]===true){
+        document.getElementById("output").innerHTML = "Card already used";
+        permissiondenied.play()
+      }
+      
+
+
+      else if (checkCard(val)){
+      attendance[val] = true
       document.getElementById("output").innerHTML = "PASS";
       bell.play()
     }
+
+
       else{document.getElementById("output").innerHTML = "FAIL";
           permissiondenied.play()
     }
@@ -56,14 +67,14 @@ function GetData(user,password){
 
         }}catch(error){console.log(123);return;location.reload()}
 
-        }}catch(error){console.log(1);return;location.reload()}
+        }catch(error){console.log(1);return;location.reload()}
 
         
         data = dataJSON[user]
 
         //Initialise the variable for storing the attendance
         attendance = {}
-
+      try{
         if(data === undefined){;return}
       }
       catch(error){alert(error);location.reload();return}
@@ -86,9 +97,7 @@ try{
 
 
 function checkCard(x){
-  //First we need to check whether the card is already used
-  if(attendance[x]===true){return false}
-  attendance[x] = true
+  
         
         for(let i = 0;i<data.length;i++){
           if (x == data[i]){
