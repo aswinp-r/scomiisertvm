@@ -8,8 +8,11 @@ function inputBox(){
     if (len == 10){
       //First we need to check whether the card is already used
       if(attendance[val]===true){
-        document.getElementById("output").innerHTML = "Card already used";
+        document.getElementById("output").innerHTML = "CARD ALREADY USED";
+        document.getElementById("box").style.backgroundColor = "Red";
         permissiondenied.play()
+        setTimeout(function(){document.getElementById("user").value = "";},800);
+        
       }
       
 
@@ -17,15 +20,18 @@ function inputBox(){
       else if (checkCard(val)){
       attendance[val] = true
       document.getElementById("output").innerHTML = "PASS";
+      document.getElementById("box").style.backgroundColor = "Green";
       bell.play()
     }
 
 
       else{document.getElementById("output").innerHTML = "FAIL";
+      document.getElementById("box").style.backgroundColor = "Red";
           permissiondenied.play()
     }
 
       setTimeout(function(){document.getElementById("user").value = "";},800);
+      setTimeout(function(){document.getElementById("box").style.backgroundColor = "white";},800);
       setTimeout(function(){document.getElementById("output").innerHTML = "";},800);
     }
     else if(len > 10){document.getElementById("user").value = "";}
@@ -136,7 +142,7 @@ function checkCard(x){
        
        document.getElementById("sub").disabled = true
        document.getElementById("sub").setAttribute("type","hidden")
-       document.querySelector("div").setAttribute('style',"height:160px;")
+       document.querySelector("div").setAttribute('style',"height:190px;")
 
     }
 
