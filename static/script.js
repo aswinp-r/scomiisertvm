@@ -109,7 +109,7 @@ function checkCard(x){
        document.getElementById("pass").setAttribute("type","hidden")
        //Change value of the user input
        document.getElementById("user").value = ""
-       document.getElementById("user").placeholder = "carnumber"
+       document.getElementById("user").placeholder = "cardnumber"
        document.getElementById("user").addEventListener('input',()=> inputBox())
        document.getElementById("user").focus()
        
