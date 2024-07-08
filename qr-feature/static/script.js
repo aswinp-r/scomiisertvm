@@ -1,42 +1,4 @@
 
-function inputBox(){
-    let textinput = document.getElementById("user");
-    let val =  textinput.value;
-    let len =val.length;
-    
-   
-    if (len == 10){
-      //First we need to check whether the card is already used
-      if(attendance[val]===true){
-        document.getElementById("output").innerHTML = "CARD ALREADY USED";
-        document.getElementById("box").style.backgroundColor = "Red";
-        permissiondenied.play()
-        setTimeout(function(){document.getElementById("user").value = "";},800);
-        
-      }
-      
-
-
-      else if (checkCard(val)){
-      attendance[val] = true
-      document.getElementById("output").innerHTML = "PASS";
-      document.getElementById("box").style.backgroundColor = "Green";
-      bell.play()
-    }
-
-
-      else{document.getElementById("output").innerHTML = "FAIL";
-      document.getElementById("box").style.backgroundColor = "Red";
-          permissiondenied.play()
-    }
-
-      setTimeout(function(){document.getElementById("user").value = "";},800);
-      setTimeout(function(){document.getElementById("box").style.backgroundColor = "white";},800);
-      setTimeout(function(){document.getElementById("output").innerHTML = "";},800);
-    }
-    else if(len > 10){document.getElementById("user").value = "";}
-}  
-
 
 
 
@@ -143,8 +105,8 @@ function checkCard(x){
        
        document.getElementById("sub").disabled = true
        document.getElementById("sub").setAttribute("type","hidden")
-       document.querySelector("div").setAttribute('style',"height:100px;")
-       document.getElementById('login').setAttribute('style','width:500px;heigh:500px;')
+       document.querySelector("div").setAttribute('style',"height:100px;margin:auto;")
+       document.getElementById('login').setAttribute('style','width:40%;height:40%;margin:auto;')
       // When scan is successful fucntion will produce data
       flag = 1;
       function onScanSuccess(qrCodeMessage) {
@@ -174,7 +136,7 @@ function checkCard(x){
             permissiondenied.play()
       }
         flag = 0;
-        setTimeout(function(){flag = 1;},840);
+        setTimeout(function(){flag = 1;},1100);
         setTimeout(function(){document.getElementById("box").style.backgroundColor = "white";},800);
         setTimeout(function(){document.getElementById("output").innerHTML = "";},800);
       }
@@ -182,7 +144,7 @@ function checkCard(x){
 
       // When scan is unsuccessful fucntion will produce error message
       function onScanError(errorMessage) {
-        // Handle Scan Error
+        alert("Try again");
       }
 
       // Setting up Qr Scanner properties
