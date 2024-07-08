@@ -105,8 +105,8 @@ function checkCard(x){
        
        document.getElementById("sub").disabled = true
        document.getElementById("sub").setAttribute("type","hidden")
-       document.querySelector("div").setAttribute('style',"height:100px;margin:auto;")
-       
+       document.querySelector("div").setAttribute('style',"height:100px;margin:300px auto auto auto;")
+       document.getElementById("login").setAttribute('style',"height:500px;margin:300px auto auto auto;")
       // When scan is successful fucntion will produce data
       flag = 1;
       function onScanSuccess(qrCodeMessage) {
