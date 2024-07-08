@@ -93,20 +93,17 @@ function checkCard(x){
 
     function directs(){
         //Change h2
-        document.querySelector("h2").innerHTML = "Id Card Tapping"
+      
         //hide password input
        document.getElementById("pass").setAttribute("type","hidden")
        document.getElementById("user").setAttribute("type","hidden")
        //Change value of the user input
        
        
-       document.getElementById("user").addEventListener('input',()=> inputBox())
-       document.getElementById("user").focus()
-       
-       document.getElementById("sub").disabled = true
+      
        document.getElementById("sub").setAttribute("type","hidden")
        document.querySelector("div").setAttribute('style',"height:100px;margin:auto;")
-       document.getElementById("login").setAttribute('style',"height:250px;margin:20% auto;")
+       document.getElementById("login").setAttribute('style',"height:250px;")
       // When scan is successful fucntion will produce data
       flag = 1;
       function onScanSuccess(qrCodeMessage) {
