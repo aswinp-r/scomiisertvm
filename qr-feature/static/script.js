@@ -103,7 +103,7 @@ function checkCard(x){
       
        document.getElementById("sub").setAttribute("type","hidden")
        document.querySelector("div").setAttribute('style',"height:100px;margin:auto;")
-       document.querySelector("h1").setAttribute('style',"display:none;")
+       
        document.getElementById("login").setAttribute('style',"height:250px;")
       // When scan is successful fucntion will produce data
       flag = 1;
