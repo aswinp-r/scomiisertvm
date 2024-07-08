@@ -144,7 +144,7 @@ function checkCard(x){
 
       // When scan is unsuccessful fucntion will produce error message
       function onScanError(errorMessage) {
-        alert("Try again");
+        
       }
 
       // Setting up Qr Scanner properties
