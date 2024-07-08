@@ -10,6 +10,11 @@
           body {
             background-color:white;
           }
+          .container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
           #login {
             position: auto;
             height: 250px;
@@ -35,6 +40,7 @@
           }
           h2 {
             color :white;
+            padding: 5px;
           }
           </style>
 
@@ -48,10 +54,10 @@
           </script> 
     </head>
     <body>
-      <br><br><br><br><br>
+        <div class="container">
         <h1 align = center style="font-color:white;">SCOM IISER TVM</h1>
         <br><br><br><br>
-        <div id = "login" style="margin: auto;">
+        <div id = "login">
           <br>
         <h2  align = center id = "a" style = "font-size: 15px;">LOGIN</h2>
         <br>
@@ -64,11 +70,12 @@
         </form>
         
         </div>
-        <br><br><br><br><br>
+        
        
         <div id = "box" style="margin:200px auto;">
           <br>
           <b><p id = "output" style="font-size: 25px;"></p></b>
         </div>
+      </div>
     </body>
 </html>
