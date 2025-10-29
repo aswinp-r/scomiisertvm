@@ -12,7 +12,6 @@
       }
 
       #login {
-        position: auto;
         height: 250px;
         width: min(300px, 70%);
         background-color: rgb(59, 1, 120);
@@ -23,7 +22,6 @@
       }
 
       #box {
-        position: auto;
         height: 110px;
         width: min(250px, 70%);
         background-color: white;
@@ -87,22 +85,6 @@
         transform: scale(1.05);
       }
     </style>
-
-    <script>
-      // Prevent default form submit
-      window.addEventListener("load", () => {
-        document
-          .getElementById("form")
-          .addEventListener("submit", (event) => event.preventDefault());
-        document
-          .getElementById("form")
-          .addEventListener("keypress", (event) => {
-            if (event.keycode == 13) {
-              event.preventDefault();
-            }
-          });
-      });
-    </script>
   </head>
 
   <body>
@@ -114,13 +96,27 @@
       <h2 align="center" id="a" style="font-size: 15px">LOGIN</h2>
       <br />
       <form style="text-align: center" id="form" onsubmit="handleSubmit(this)">
-        <input type="text" name="user" id="user" placeholder="user" autofocus size="22" />
+        <input
+          type="text"
+          name="user"
+          id="user"
+          placeholder="user"
+          autofocus
+          size="22"
+        />
         <br /><br />
-        <input type="password" id="pass" name="password" placeholder="Password" size="22" />
+        <input
+          type="password"
+          id="pass"
+          name="password"
+          placeholder="Password"
+          size="22"
+        />
         <br /><br />
         <input type="submit" id="sub" value="submit" />
       </form>
     </div>
+
     <br /><br /><br /><br /><br />
     <div id="box">
       <br />
@@ -134,6 +130,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <!-- Main logic -->
-    <script src="static/script.js"></script>
+    <script type="module" src="static/script.js"></script>
   </body>
 </html>

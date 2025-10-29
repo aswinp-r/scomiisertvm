@@ -1,9 +1,14 @@
-// ====== Import Firebase SDKs ======
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+// === Firebase imports ===
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ====== Firebase Configuration ======
+// === Firebase Configuration ===
+// Replace with YOUR Firebase web config
 const firebaseConfig = {
   apiKey: "AIzaSyDMeX3-iFLWVy17IzqUijXwAFFroO1LjvM",
   authDomain: "scom-1e5e6.firebaseapp.com",
@@ -11,97 +16,26 @@ const firebaseConfig = {
   storageBucket: "scom-1e5e6.firebasestorage.app",
   messagingSenderId: "670586958567",
   appId: "1:670586958567:web:6b264ba16f44137ebda842",
-  measurementId: "G-BVZPMP1G8B"
+  measurementId: "G-BVZPMP1G8B",
 };
 
-// ====== Initialize Firebase ======
+// === Initialize Firebase ===
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-getAnalytics(app);
 
-// ====== Local Variables ======
+// === Global variables ===
 let data = [];
 let attendance = {};
-let bell = new Audio("res/bell.mp3");
-let permissiondenied = new Audio("res/permissiondenied.mp3");
+let sessionUser = "";
 
-// ====== Core Functions ======
-function decrypt(string, password) {
-  try {
-    var x = CryptoJS.Rabbit.decrypt(string, password);
-    return x.toString(CryptoJS.enc.Utf8);
-  } catch (error) {
-    throw "User or password may be incorrect or try again later";
-  }
-}
+// === Audio ===
+const bell = new Audio("res/bell.mp3");
+const permissiondenied = new Audio("res/permissiondenied.mp3");
 
-function checkCard(x) {
-  for (let i = 0; i < data.length; i++) {
-    if (x == data[i]) return true;
-  }
-  return false;
-}
-
-function inputBox() {
-  let textinput = document.getElementById("user");
-  let val = textinput.value;
-  let len = val.length;
-
-  if (len == 10) {
-    if (attendance[val] === true) {
-      document.getElementById("output").innerHTML = "CARD ALREADY USED";
-      document.getElementById("box").style.backgroundColor = "red";
-      permissiondenied.play();
-      setTimeout(() => (document.getElementById("user").value = ""), 800);
-    } else if (checkCard(val)) {
-      attendance[val] = true;
-      document.getElementById("output").innerHTML = "PASS";
-      document.getElementById("box").style.backgroundColor = "green";
-      bell.play();
-      saveAttendance(val);
-    } else {
-      document.getElementById("output").innerHTML = "FAIL";
-      document.getElementById("box").style.backgroundColor = "red";
-      permissiondenied.play();
-    }
-
-    setTimeout(() => (document.getElementById("user").value = ""), 800);
-    setTimeout(() => (document.getElementById("box").style.backgroundColor = "white"), 800);
-    setTimeout(() => (document.getElementById("output").innerHTML = ""), 800);
-  } else if (len > 10) {
-    document.getElementById("user").value = "";
-  }
-}
-
-function GetData(user, password) {
-  let jsonreq = new XMLHttpRequest();
-  jsonreq.onload = function () {
-    try {
-      var responseData = this.responseText;
-      var decrypted_data = decrypt(responseData, password);
-      var dataJSON = JSON.parse(decrypted_data);
-
-      if (!dataJSON[user] || dataJSON[user].length === 0) {
-        alert("User or password may be incorrect or try again later");
-        return;
-      }
-
-      data = dataJSON[user];
-      attendance = {};
-      directs();
-    } catch (error) {
-      alert("Invalid data or decryption failed");
-      location.reload();
-    }
-  };
-
-  jsonreq.open("GET", "res/data.json");
-  jsonreq.send();
-}
-
+// === Handle login ===
 function handleSubmit(form) {
-  var user = form.user.value;
-  var password = form.password.value;
+  const user = form.user.value.trim();
+  const password = form.password.value.trim();
 
   if (!user || !password) {
     alert("User and password can't be empty");
@@ -111,66 +45,132 @@ function handleSubmit(form) {
   GetData(user, password);
 }
 
+// === Fetch and decrypt card data ===
+function GetData(user, password) {
+  fetch("res/data.json")
+    .then((res) => res.text())
+    .then((responseData) => {
+      const decrypted_data = decrypt(responseData, password);
+      const dataJSON = JSON.parse(decrypted_data);
+
+      if (!dataJSON[user] || dataJSON[user].length === 0) {
+        alert("User or password may be incorrect or try again later");
+        return;
+      }
+
+      data = dataJSON[user];
+      attendance = {};
+      sessionUser = user;
+      directs();
+    })
+    .catch((err) => {
+      alert("Error fetching data. Try again later.");
+      console.error(err);
+    });
+}
+
+// === Decrypt function ===
+function decrypt(string, password) {
+  const x = CryptoJS.Rabbit.decrypt(string, password);
+  return x.toString(CryptoJS.enc.Utf8);
+}
+
+// === Check if card valid ===
+function checkCard(x) {
+  return data.includes(x);
+}
+
+// === Handle card input ===
+window.inputBox = async function () {
+  const textinput = document.getElementById("user");
+  const val = textinput.value.trim();
+  const len = val.length;
+
+  if (len === 10) {
+    if (attendance[val]) {
+      displayMessage("CARD ALREADY USED", "red");
+      permissiondenied.play();
+      resetInput();
+      return;
+    }
+
+    if (checkCard(val)) {
+      attendance[val] = true;
+      displayMessage("PASS", "green");
+      bell.play();
+      await saveAttendance(val);
+    } else {
+      displayMessage("FAIL", "red");
+      permissiondenied.play();
+    }
+
+    resetInput();
+  } else if (len > 10) {
+    textinput.value = "";
+  }
+};
+
+// === Save attendance to Firestore ===
+async function saveAttendance(cardNumber) {
+  const timestamp = new Date().toISOString();
+  try {
+    await addDoc(collection(db, "attendanceRecords"), {
+      session: sessionUser,
+      cardNumber,
+      timestamp,
+    });
+  } catch (err) {
+    console.error("Firestore save error:", err);
+  }
+}
+
+// === Display messages ===
+function displayMessage(text, color) {
+  const box = document.getElementById("box");
+  const output = document.getElementById("output");
+  box.style.backgroundColor = color;
+  output.innerHTML = text;
+}
+
+// === Reset UI after tap ===
+function resetInput() {
+  setTimeout(() => {
+    document.getElementById("user").value = "";
+    document.getElementById("box").style.backgroundColor = "white";
+    document.getElementById("output").innerHTML = "";
+  }, 800);
+}
+
+// === Prepare UI after login ===
 function directs() {
   document.querySelector("h2").innerHTML = "Id Card Tapping";
   document.getElementById("pass").setAttribute("type", "hidden");
   document.getElementById("user").value = "";
   document.getElementById("user").placeholder = "cardnumber";
-  document.getElementById("user").addEventListener("input", () => inputBox());
+  document.getElementById("user").addEventListener("input", inputBox);
   document.getElementById("user").focus();
   document.getElementById("sub").disabled = true;
   document.getElementById("sub").setAttribute("type", "hidden");
   document.querySelector("div").setAttribute("style", "height:190px;");
 
-  addDownloadButton(); // Add download button here
+  // Show download button
+  document.getElementById("downloadBtn").style.display = "block";
+  document.getElementById("downloadBtn").addEventListener("click", downloadAttendance);
 }
 
-// ====== Firestore Integration ======
-async function saveAttendance(cardNumber) {
-  try {
-    await addDoc(collection(db, "attendanceRecords"), {
-      cardNumber: cardNumber,
-      timestamp: new Date().toISOString(),
-    });
-    console.log("Attendance saved for:", cardNumber);
-  } catch (error) {
-    console.error("Error saving attendance:", error);
-  }
-}
-
+// === Download attendance as Excel ===
 async function downloadAttendance() {
-  try {
-    const querySnapshot = await getDocs(collection(db, "attendanceRecords"));
-    const rows = [["Card Number", "Timestamp"]];
-    querySnapshot.forEach((doc) => {
-      const { cardNumber, timestamp } = doc.data();
-      rows.push([cardNumber, timestamp]);
-    });
+  const querySnapshot = await getDocs(collection(db, "attendanceRecords"));
+  const rows = [];
 
-    let csvContent = "data:text/csv;charset=utf-8," + rows.map((e) => e.join(",")).join("\n");
-    const link = document.createElement("a");
-    link.href = encodeURI(csvContent);
-    link.download = "attendance_data.csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (error) {
-    alert("Error downloading data");
-    console.error(error);
-  }
+  querySnapshot.forEach((doc) => {
+    rows.push(doc.data());
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
+  XLSX.writeFile(workbook, "attendance.xlsx");
 }
 
-// ====== UI Enhancements ======
-function addDownloadButton() {
-  const btn = document.createElement("button");
-  btn.innerText = "⬇️ Download Attendance";
-  btn.style.cssText =
-    "display:block;margin:20px auto;padding:10px 20px;background:#4CAF50;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;";
-  btn.onclick = downloadAttendance;
-  document.body.appendChild(btn);
-}
-
-// Prevent submit reload
-window.addEventListener("load", () => {
-  document.getElementById("form").addEventListener("submit", (event) => event.preventDefault());
-});
+window.handleSubmit = handleSubmit;
